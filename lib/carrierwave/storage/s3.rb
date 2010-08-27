@@ -66,6 +66,7 @@ module CarrierWave
           @uploader = uploader
           @path = path
           @base = base
+          @headers = {}
         end
 
         ##
@@ -139,22 +140,26 @@ module CarrierWave
         end
 
         def content_type
-          headers["content-type"]
+          header("content-type")
         end
 
         def content_type=(type)
-          headers["content-type"] = type
+          @headers["content-type"] = type
         end
 
         def size
-         	headers['content-length'].to_i
+          header('content-length').to_i
         end
 
-        # Headers returned from file retrieval
-        def headers
-          @headers ||= connection.head(bucket, @path)
+        def header(key)
+          @headers[key] ? @headers[key] : headers(true)[key]
         end
 
+        def headers(refresh = false)
+          @headers = connection.head(bucket, @path) if refresh
+          @headers
+        end
+ 
       private
     
         def bucket

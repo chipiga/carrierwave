@@ -48,7 +48,7 @@ if ENV['S3_SPEC']
 
       it "should retrieve headers" do
         @s3_file.instance_variable_get(:@headers).should be_blank
-        @s3_file.headers.should_not be_blank
+        @s3_file.headers(true).should_not be_blank
       end
 
       it "should return filesize" do
